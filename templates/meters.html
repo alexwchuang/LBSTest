@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>Live Building Systems</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='meters.css') }}">
+</head>
+<body>
+    <table>
+        <thead>
+            <td>Meter ID</td>
+            <td>Meter Name</td>
+        </thead>
+        <tbody>
+            {% for id, label in meter_data %}
+            <tr>
+                <td>
+                    <a href="/meters/{{id}}">{{id}}</a>
+                </td>
+                <td>{{label}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
