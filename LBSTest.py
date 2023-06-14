@@ -5,6 +5,7 @@ from flask import Flask, render_template, url_for
 import sqlite3
 import json
 from datetime import datetime
+from itertools import chain
 
 
 # Helper function due to threading restrictions on sqlite
@@ -12,14 +13,6 @@ def get_db_conn():
     conn = sqlite3.connect("LBSTestDB")
     cur = conn.cursor()
     return conn, cur
-
-# Consumes an iterable of iterables and flattens the interior structure.
-def flatten(iterable):
-    if len(iterable) == 0:
-        return []
-    if len(iterable) == 1:
-        return iterable[0]
-    return iterable[0] + flatten(iterable[1:])
 
 
 # Flask / SQLite setup
@@ -47,7 +40,7 @@ meter_data = [
 
 # Create the tables. For the purposes of this test, we will only create/insert the test data if the tables don't already exist.
 result = cur.execute("SELECT name FROM sqlite_master")
-all_tables = flatten(result.fetchall())
+all_tables = list(chain.from_iterable(result.fetchall()))
 if "meters" not in all_tables:
     cur.execute("CREATE TABLE meters(id, label)")
     cur.executemany("INSERT INTO meters VALUES(?, ?)", meters)
